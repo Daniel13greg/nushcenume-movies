@@ -3,12 +3,15 @@ services:
   - type: web
     name: nushcenume-movies
     env: node
-    buildCommand: npm install && npm run build
+    buildCommand: npm ci && npm run build
     startCommand: npm start
     port: 10000
     healthCheckPath: /
     plan: starter
     autoDeploy: true
+
+    # Node.js version - explicit specification
+    nodeVersion: 18.17.0
 
     # Environment Variables - Set these in Render dashboard
     envVars:
@@ -18,3 +21,8 @@ services:
         sync: false  # Set this in Render dashboard
       - key: NEXT_PUBLIC_WEBTORRENT_BACKEND_URL
         value: https://your-backend-service.onrender.com
+      # Additional environment variables for better compatibility
+      - key: NODE_OPTIONS
+        value: --max_old_space_size=4096
+      - key: npm_config_cache
+        value: /opt/render/.npm-cache

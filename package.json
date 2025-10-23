@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start -p 3000",
     "lint": "next lint",
+    "postinstall": "npm run lint --fix",
     "torrent:start": "cd \"backend webtorrent\" && node server.js",
     "torrent:install": "cd \"backend webtorrent\" && npm install"
   },
