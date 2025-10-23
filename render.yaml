@@ -3,7 +3,7 @@ services:
   - type: web
     name: nushcenume-movies
     env: node
-    buildCommand: npm ci && npm run build
+    buildCommand: npm install --include=dev && npm run build
     startCommand: npm start
     port: 10000
     healthCheckPath: /
@@ -11,7 +11,7 @@ services:
     autoDeploy: true
 
     # Node.js version - explicit specification
-    nodeVersion: 18.17.0
+    nodeVersion: 22
 
     # Environment Variables - Set these in Render dashboard
     envVars:
