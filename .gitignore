@@ -112,5 +112,14 @@ backend\ webtorrent/node_modules/
 backend\ webtorrent/*.log
 backend\ webtorrent/.env
 
+# Deleted/Old files
+deleted/
+
 # TypeScript
 *.tsbuildinfo
+
+# Render
+.render/
+
+# Next.js config (keep .js version, ignore .mjs)
+next.config.mjs
