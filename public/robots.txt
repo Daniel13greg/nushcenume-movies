@@ -1,0 +1,19 @@
+# robots.txt for NushCeNume
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /offline
+
+# Sitemap
+Sitemap: http://localhost:3000/sitemap.xml
+
+# Common crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
