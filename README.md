@@ -34,6 +34,34 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 
 For production, update the base URL to your domain.
 
+### 🚀 Deploy to Render.com
+
+1. **Connect Repository**
+   - Go to [Render.com](https://render.com) and create a new Web Service
+   - Connect your GitHub repository
+   - Set service name: `nushcenume-movies`
+
+2. **Configure Build**
+   - **Runtime:** Node.js
+   - **Build Command:** `npm run build`
+   - **Start Command:** `npm start`
+   - **Port:** `10000` (Render will auto-detect)
+
+3. **Environment Variables**
+   Add these in Render dashboard:
+   ```
+   NODE_ENV=production
+   TMDB_API_KEY=your_tmdb_api_key_here
+   NEXT_PUBLIC_WEBTORRENT_BACKEND_URL=https://your-backend-url
+   ```
+
+4. **Deploy**
+   - Click "Create Web Service"
+   - Wait for deployment to complete
+   - Your app will be available at `https://your-app-name.onrender.com`
+
+**Note:** If using torrent features, deploy the backend separately or use the start scripts for local development.
+
 ## 🚀 Phase 1 Features Implemented
 
 NushCeNume now includes these production-ready features:

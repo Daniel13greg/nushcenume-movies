@@ -1,0 +1,27 @@
+# Render deployment configuration for Next.js app
+services:
+  - type: web
+    name: nushcenume-movies
+    env: node
+    buildCommand: npm run build
+    startCommand: npm start
+    port: 10000
+    healthCheckPath: /
+    plan: starter
+    autoDeploy: true
+
+    # Environment Variables - Set these in Render dashboard
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Add your TMDB API key in Render dashboard
+      - key: TMDB_API_KEY
+        sync: false
+      # Backend URL - update this to your backend deployment URL
+      - key: NEXT_PUBLIC_WEBTORRENT_BACKEND_URL
+        value: https://your-backend-service.onrender.com
+
+# Build settings
+build:
+  builder: NIXPACKS
+  buildCommand: npm run build
