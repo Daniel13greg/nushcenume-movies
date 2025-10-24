@@ -1,24 +1,29 @@
-"use client"
+"use client";
 
-import { useState } from 'react'
-import { TorrentApiStatus } from '@/components/torrent-api-status'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Play, Search, Loader2 } from 'lucide-react'
-import dynamic from 'next/dynamic'
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { useState } from 'react';
+import { TorrentApiStatus } from '@/components/torrent-api-status';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Play, Search, Loader2 } from 'lucide-react';
+import dynamic from 'next/dynamic';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 const VideoPlayer = dynamic(() => import('@/components/video-player'), {
   ssr: false,
   loading: () => <div className="w-full aspect-video bg-muted animate-pulse" />,
-})
+});
+
+/**
+ * Torrent Integration Test Page
+ * Use this page to test the torrent API integration
+ */
 
 interface TestMovie {
-  tmdbId: number
-  title: string
-  type: 'movie' | 'show'
+  tmdbId: number;
+  title: string;
+  type: 'movie' | 'show';
 }
 
 const TEST_MOVIES: TestMovie[] = [
@@ -27,76 +32,77 @@ const TEST_MOVIES: TestMovie[] = [
   { tmdbId: 122, title: 'The Lord of the Rings: The Return of the King', type: 'movie' },
   { tmdbId: 278, title: 'The Shawshank Redemption', type: 'movie' },
   { tmdbId: 155, title: 'The Dark Knight', type: 'movie' },
-]
+];
 
 export default function TorrentTestPage() {
-  const [customTmdbId, setCustomTmdbId] = useState('')
-  const [testResults, setTestResults] = useState<{ id: number; success: boolean; message: string }[]>([])
-  const [testing, setTesting] = useState(false)
+  const [customTmdbId, setCustomTmdbId] = useState('');
+  const [testResults, setTestResults] = useState<{ id: number; success: boolean; message: string }[]>([]);
+  const [testing, setTesting] = useState(false);
 
   const testSingleMovie = async (tmdbId: number) => {
-    const apiUrl = process.env.NEXT_PUBLIC_TORRENT_API_URL || 'http://localhost:3000'
-    const apiKey = process.env.NEXT_PUBLIC_TORRENT_API_KEY || '2a452893104f67c7ec892d41fafd4265d3906e17657bd52664832d0f3df5f4c1'
+    const apiUrl = process.env.NEXT_PUBLIC_TORRENT_API_URL || 'http://localhost:3000';
+    const apiKey = process.env.NEXT_PUBLIC_TORRENT_API_KEY || '2a452893104f67c7ec892d41fafd4265d3906e17657bd52664832d0f3df5f4c1';
 
     try {
       const response = await fetch(
         `${apiUrl}/api/search/${tmdbId}?apikey=${apiKey}&type=movie`,
         { cache: 'no-store' }
-      )
+      );
 
       if (!response.ok) {
         return {
           id: tmdbId,
           success: false,
           message: `API returned status ${response.status}`,
-        }
+        };
       }
 
-      const data = await response.json()
+      const data = await response.json();
       
       if (data.torrents && data.torrents.length > 0) {
         return {
           id: tmdbId,
           success: true,
           message: `Found ${data.torrents.length} torrent sources`,
-        }
+        };
       } else {
         return {
           id: tmdbId,
           success: false,
           message: 'No torrent sources found',
-        }
+        };
       }
     } catch (error) {
       return {
         id: tmdbId,
         success: false,
         message: error instanceof Error ? error.message : 'Unknown error',
-      }
+      };
     }
-  }
+  };
 
   const runAllTests = async () => {
-    setTesting(true)
-    setTestResults([])
+    setTesting(true);
+    setTestResults([]);
 
     for (const movie of TEST_MOVIES) {
-      const result = await testSingleMovie(movie.tmdbId)
-      setTestResults(prev => [...prev, result])
-      await new Promise(resolve => setTimeout(resolve, 500))
+      const result = await testSingleMovie(movie.tmdbId);
+      setTestResults(prev => [...prev, result]);
+      // Wait a bit between requests to avoid rate limiting
+      await new Promise(resolve => setTimeout(resolve, 500));
     }
 
-    setTesting(false)
-  }
+    setTesting(false);
+  };
 
   const testCustomMovie = async () => {
-    if (!customTmdbId) return
+    if (!customTmdbId) return;
 
-    setTesting(true)
-    const result = await testSingleMovie(parseInt(customTmdbId))
-    setTestResults([result])
-    setTesting(false)
-  }
+    setTesting(true);
+    const result = await testSingleMovie(parseInt(customTmdbId));
+    setTestResults([result]);
+    setTesting(false);
+  };
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -108,8 +114,10 @@ export default function TorrentTestPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
+        {/* API Status Card */}
         <TorrentApiStatus />
 
+        {/* Configuration Info */}
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Configuration</CardTitle>
@@ -137,6 +145,7 @@ export default function TorrentTestPage() {
         </Card>
       </div>
 
+      {/* Test Popular Movies */}
       <Card className="mb-8">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -164,7 +173,7 @@ export default function TorrentTestPage() {
         <CardContent>
           <div className="space-y-3">
             {TEST_MOVIES.map((movie) => {
-              const result = testResults.find(r => r.id === movie.tmdbId)
+              const result = testResults.find(r => r.id === movie.tmdbId);
               
               return (
                 <div
@@ -207,12 +216,13 @@ export default function TorrentTestPage() {
                     </Dialog>
                   </div>
                 </div>
-              )
-            })
+              );
+            })}
           </div>
         </CardContent>
       </Card>
 
+      {/* Custom TMDB ID Test */}
       <Card>
         <CardHeader>
           <CardTitle>Test Custom TMDB ID</CardTitle>
@@ -246,7 +256,9 @@ export default function TorrentTestPage() {
               {testResults.map((result) => (
                 <div
                   key={result.id}
-                  className={`p-3 rounded-lg ${result.success ? 'bg-green-500/10 border-green-500' : 'bg-destructive/10 border-destructive'} border`}
+                  className={`p-3 rounded-lg ${
+                    result.success ? 'bg-green-500/10 border-green-500' : 'bg-destructive/10 border-destructive'
+                  } border`}
                 >
                   <p className="text-sm font-medium">
                     {result.success ? '✓ Success' : '✗ Failed'}
@@ -259,6 +271,7 @@ export default function TorrentTestPage() {
         </CardContent>
       </Card>
 
+      {/* Documentation Link */}
       <div className="mt-8 p-6 bg-muted rounded-lg">
         <h3 className="font-semibold mb-2">Need Help?</h3>
         <p className="text-sm text-muted-foreground mb-3">
@@ -272,5 +285,5 @@ export default function TorrentTestPage() {
         </ul>
       </div>
     </div>
-  )
+  );
 }
