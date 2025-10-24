@@ -83,7 +83,6 @@ export default function TorrentTestPage() {
     for (const movie of TEST_MOVIES) {
       const result = await testSingleMovie(movie.tmdbId)
       setTestResults(prev => [...prev, result])
-      // Wait a bit between requests to avoid rate limiting
       await new Promise(resolve => setTimeout(resolve, 500))
     }
 
@@ -109,10 +108,8 @@ export default function TorrentTestPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6 mb-8">
-        {/* API Status Card */}
         <TorrentApiStatus />
 
-        {/* Configuration Info */}
         <Card>
           <CardHeader>
             <CardTitle className="text-lg">Configuration</CardTitle>
@@ -140,7 +137,6 @@ export default function TorrentTestPage() {
         </Card>
       </div>
 
-      {/* Test Popular Movies */}
       <Card className="mb-8">
         <CardHeader>
           <div className="flex items-center justify-between">
@@ -217,7 +213,6 @@ export default function TorrentTestPage() {
         </CardContent>
       </Card>
 
-      {/* Custom TMDB ID Test */}
       <Card>
         <CardHeader>
           <CardTitle>Test Custom TMDB ID</CardTitle>
@@ -264,7 +259,6 @@ export default function TorrentTestPage() {
         </CardContent>
       </Card>
 
-      {/* Documentation Link */}
       <div className="mt-8 p-6 bg-muted rounded-lg">
         <h3 className="font-semibold mb-2">Need Help?</h3>
         <p className="text-sm text-muted-foreground mb-3">
